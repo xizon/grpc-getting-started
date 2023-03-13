@@ -1,0 +1,26 @@
+{
+  "author": "UIUX Lab",
+  "email": "uiuxlab@gmail.com",
+  "name": "grpc-getting-started",
+  "version": "0.0.1",
+  "description": "Demonstration of the use of gRPC and front-end",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xizon/grpc-getting-started.git"
+  },
+  "scripts": {
+    "build": "sh ./scripts/build-protos.sh"
+  },
+  "keywords": [
+    "grpc"
+  ],
+  "devDependencies": {
+    "grpc-web": "^1.4.2"
+  },
+  "bugs": {
+    "url": "https://github.com/xizon/grpc-getting-started/issues"
+  },
+  "homepage": "https://github.com/xizon/grpc-getting-started#readme",
+  "main": "none",
+  "license": "MIT"
+}
