@@ -1,8 +1,15 @@
 syntax = "proto3";
-
 package hello;
 
-// Greeting represents a message you can tell a user.
-message Greeting {
-  string message = 1;
+message HelloRequest {
+    string firstName = 1;
+    string lastName = 2;
+}
+
+message HelloResponse {
+    string greeting = 1;
+}
+
+service HelloService {
+    rpc GetHelloReq(HelloRequest) returns (HelloResponse);
 }
