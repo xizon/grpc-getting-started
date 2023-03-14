@@ -310,7 +310,7 @@ $ npm i google-protobuf
 ```
 
 
-### Step 5.3. Create two files for custom webpack configurations 
+### Step 5.2. Create one file for custom webpack configurations 
 
 `build/client.config.js`: 
 
