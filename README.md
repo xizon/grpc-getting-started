@@ -2,6 +2,7 @@
 
 Demonstration of the use of gRPC and front-end.
 
+![quick overview](preview.gif)
 
 
 #### File Structures
@@ -14,6 +15,7 @@ grpc-getting-started/
 ├── package.json
 ├── package-lock.json
 ├── envoy.yaml
+├── server.js
 ├── build/          
 ├── scripts/  
 ├── dist/
@@ -220,88 +222,117 @@ const newsProto = grpc.loadPackageDefinition(packageDefinition);
 */
 
 
-function doGetHelloReq(call, callback) {
-    console.log(call.request);
-    callback(null, {
-        message: call.request.message
-    }, copyMetadata(call));
+function getHelloReqImpl(call, callback) {
+    const { firstName, lastName } = call.request;
+    callback({
+        code: grpc.status.ABORTED,
+        message: `Hello: ${firstName} ${lastName}`
+    });
 
 }
 
+
 function getServer() {
     const server = new grpc.Server();
+
     server.addService(newsProto.hello.HelloService.service, {
-        getHelloReq: doGetHelloReq
+        getHelloReq: getHelloReqImpl
     });
+
     return server;
 }
 
 function main() {
-    const serverPort = 5001;
     const server = getServer();
     server.bindAsync(
-        `localhost:${serverPort}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
+        '127.0.0.1:9090', grpc.ServerCredentials.createInsecure(), (err, port) => {
             if (err) throw err;
 
-            console.log(`Server running at http://localhost:${port}`);
+            console.log(`Server running at http://127.0.0.1:${port}`);
             server.start();
         }
     );
 }
 
-
-
-if (require.main === module) {
-    main();
-}
-
-exports.getServer = getServer;
+main();
 ```
 
 
 ## (4) Client Entry
 
 
-### Step 4.1. Create a file `src/client/index.js`:
+Create a file `src/client/index.js`:
 
 ```js
 const { HelloRequest } = require('../proto/example_pb.js');
 const { HelloServiceClient } = require('../proto/example_grpc_web_pb.js');
 
 
-const serverPort = 5001;
-const myService = new HelloServiceClient(`localhost:${serverPort}`);
+const client = new HelloServiceClient('http://' + window.location.hostname + ':12345', null, null);
 
 
-function todo() {
+function todo(str1, str2) {
 
     return new Promise((resolve, reject) => {
         const req = new HelloRequest();
-        req.setFirstname('Amy');
-        req.setLastname('Grant');
+        req.setFirstname(str1);
+        req.setLastname(str2);
 
-        myService.getHelloReq(req, {}, function (err, response) {
+        client.getHelloReq(req, {}, function (err, response) {
             if (err) {
                 resolve(err);
                 //reject(err);
             } else {
-                resolve(response);
+                resolve(response.getGreeting());
             }
         });
-
+        
     })
 }
-async function main() {
-    const data = await todo();
 
+// create form
+//===================
+const container = document.createElement("div");
+
+const input1 = document.createElement("input");
+input1.type = "text";
+input1.id = "input1";
+input1.placeholder = 'FirstName'
+container.appendChild(input1);
+
+const input2 = document.createElement("input");
+input2.type = "text";
+input2.id = "input2";
+input2.placeholder = 'LastName'
+container.appendChild(input2);
+
+const hr = document.createElement("hr");
+container.appendChild(hr);
+
+const btn = document.createElement("button");
+btn.innerHTML = "Submit";
+btn.id = "btn";
+container.appendChild(btn);
+
+document.body.appendChild(container);
+
+const $btn = document.getElementById('btn');
+$btn.addEventListener('click', (e) => {
+    e.preventDefault();
+    main(document.getElementById('input1').value, document.getElementById('input2').value);
+});
+
+
+// display response
+//===================
+async function main(str1, str2) {
+    const data = await todo(str1, str2);
     console.log(data);
+
     const div = document.createElement("h3");
-    div.innerHTML = JSON.stringify(data);
+    div.innerHTML = data.message;
     document.body.appendChild(div);
 }
-main();
-
-
 ```
 
 
@@ -326,7 +357,7 @@ $ npm i --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin br
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const clientPort = process.env.PORT || 8080;
+const clientPort = process.env.PORT || 10005;
 const clientHost = process.env.HOST || 'localhost';
 const devMode = process.env.NODE_ENV !== 'production';
 
@@ -417,8 +448,8 @@ runServer();
 
 A full installation of Xcode.app is required to compile `envoy`. Installing just the Command Line Tools is not sufficient.
 
-such as **macOS 10.15.7**, you need to download: 
-[Xcode_12.4](https://developer.apple.com/services-account/download?path=/Developer_Tools/Xcode_12.4/Xcode_12.4.xip)
+such as **macOS 12.6.3**, you need to download: 
+[Xcode_14.2](https://developer.apple.com/services-account/download?path=/Developer_Tools/Xcode_14.2/Xcode_14.2.xip)
 
 ```sh
 $ brew update
@@ -475,16 +506,12 @@ $ go version
 Create a new file `envoy.yaml`:
 
 ```yaml
-admin:
-  access_log_path: /tmp/admin_access.log
-  address:
-    socket_address: { address: 0.0.0.0, port_value: 9901 }
 
 static_resources:
   listeners:
     - name: listener_0
       address:
-        socket_address: { address: 0.0.0.0, port_value: 8080 }
+        socket_address: { address: 127.0.0.1, port_value: 12345 }
       filter_chains:
         - filters:
           - name: envoy.filters.network.http_connection_manager
@@ -500,7 +527,7 @@ static_resources:
                     routes:
                       - match: { prefix: "/" }
                         route:
-                          cluster: greeter_service
+                          cluster: hello_service
                           timeout: 0s
                           max_stream_duration:
                             grpc_timeout_header_max: 0s
@@ -522,7 +549,7 @@ static_resources:
                   typed_config:
                     "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
   clusters:
-    - name: greeter_service
+    - name: hello_service
       connect_timeout: 0.25s
       type: logical_dns
       http2_protocol_options: {}
@@ -535,8 +562,8 @@ static_resources:
             - endpoint:
                 address:
                   socket_address:
-                    address: localhost
-                    port_value: 5001
+                    address: 127.0.0.1
+                    port_value: 9090
 ```
 
 
@@ -556,8 +583,25 @@ static_resources:
 >         address: docker.for.mac.localhost
 > ```
 
+### Step 6.3. Run the Envoy proxy. 
 
-### Step 6.3. Running Port `8080` and Server for local test
+The **envoy.yaml** file configures Envoy to listen to browser requests at port `12345`, and forward them to port `9090`.
+
+```sh
+$ npm run proxy
+```
+or 
+
+```sh
+$ envoy -c ./envoy.yaml
+```
+
+
+### Step 6.4. When these are all ready, you can open a browser tab and navigate to `http://localhost:10005`
+
+
+ - the NodeJS gRPC Service (port `9090`)
+ - the webpack server (port `10005`)
 
 
 run following command to test:
@@ -569,17 +613,17 @@ $ npm run start
 or 
 
 ```sh
-$ node ./server.js & envoy -c ./envoy.yaml
+$ node ./server.js & node ./src/server/index.js
 ```
 
-### Step 6.4. heck data transfer
+
+### Step 6.5. Test connection
 
 Use the command to detect:
 
 ```sh
-$ curl -I http://localhost:5001/hello.HelloService/GetHelloReq
+$ curl -I http://localhost:12345/hello.HelloService/GetHelloReq?firstName=Amy&lastName=Grant
 ```
-
 
 
 ## Licensing

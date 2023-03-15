@@ -35,39 +35,36 @@ const newsProto = grpc.loadPackageDefinition(packageDefinition);
 */
 
 
-function doGetHelloReq(call, callback) {
-    console.log(call.request);
-    callback(null, {
-        message: call.request.message
-    }, copyMetadata(call));
+function getHelloReqImpl(call, callback) {
+    const { firstName, lastName } = call.request;
+    callback({
+        code: grpc.status.ABORTED,
+        message: `Hello: ${firstName} ${lastName}`
+    });
 
 }
 
+
 function getServer() {
     const server = new grpc.Server();
+
     server.addService(newsProto.hello.HelloService.service, {
-        getHelloReq: doGetHelloReq
+        getHelloReq: getHelloReqImpl
     });
+
     return server;
 }
 
 function main() {
-    const serverPort = 5001;
     const server = getServer();
     server.bindAsync(
-        `localhost:${serverPort}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
+        '127.0.0.1:9090', grpc.ServerCredentials.createInsecure(), (err, port) => {
             if (err) throw err;
 
-            console.log(`Server running at http://localhost:${port}`);
+            console.log(`Server running at http://127.0.0.1:${port}`);
             server.start();
         }
     );
 }
 
-
-
-if (require.main === module) {
-    main();
-}
-
-exports.getServer = getServer;
+main();

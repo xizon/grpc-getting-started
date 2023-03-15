@@ -1,7 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-const clientPort = process.env.PORT || 8080;
+const clientPort = process.env.PORT || 10005;
 const clientHost = process.env.HOST || 'localhost';
 const devMode = process.env.NODE_ENV !== 'production';
 

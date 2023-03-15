@@ -2,8 +2,8 @@
   "author": "UIUX Lab",
   "email": "uiuxlab@gmail.com",
   "name": "grpc-getting-started",
-  "version": "0.0.3",
-  "main": "./src/server/index.js",
+  "version": "0.0.5",
+  "main": "none",
   "description": "Demonstration of the use of gRPC and front-end",
   "repository": {
     "type": "git",
@@ -12,7 +12,8 @@
   "scripts": {
     "build:protos": "sh ./scripts/build-protos.sh",
     "build:client": "webpack --progress --mode production --config ./build/client.config.js",
-    "start": "node ./server.js & envoy -c ./envoy.yaml"
+    "proxy": "envoy -c ./envoy.yaml",
+    "start": "node ./server.js & node ./src/server/index.js"
   },
   "keywords": [
     "grpc"
