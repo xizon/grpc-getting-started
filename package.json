@@ -2,7 +2,8 @@
   "author": "UIUX Lab",
   "email": "uiuxlab@gmail.com",
   "name": "grpc-getting-started",
-  "version": "0.0.2",
+  "version": "0.0.3",
+  "main": "./src/server/index.js",
   "description": "Demonstration of the use of gRPC and front-end",
   "repository": {
     "type": "git",
@@ -11,13 +12,16 @@
   "scripts": {
     "build:protos": "sh ./scripts/build-protos.sh",
     "build:client": "webpack --progress --mode production --config ./build/client.config.js",
-    "start": "node ./server.js & node ./src/server/index.js"
+    "start": "node ./server.js & envoy -c ./envoy.yaml"
   },
   "keywords": [
     "grpc"
   ],
   "devDependencies": {
+    "@grpc/grpc-js": "^1.8.12",
+    "@grpc/proto-loader": "^0.7.5",
     "browserify": "^17.0.0",
+    "google-protobuf": "^3.21.2",
     "grpc-web": "^1.4.2",
     "html-webpack-plugin": "^5.5.0",
     "webpack": "^5.76.1",
@@ -28,11 +32,5 @@
     "url": "https://github.com/xizon/grpc-getting-started/issues"
   },
   "homepage": "https://github.com/xizon/grpc-getting-started#readme",
-  "main": "none",
-  "license": "MIT",
-  "dependencies": {
-    "@grpc/grpc-js": "^1.8.12",
-    "@grpc/proto-loader": "^0.7.5",
-    "google-protobuf": "^3.21.2"
-  }
+  "license": "MIT"
 }
