@@ -52,8 +52,8 @@ grpc-getting-started/
 
 // 步骤 1. 基本配置
 // ================================================ ====
-// 第一行告诉编译器这个文件中使用了什么语法。 默认情况下，编译器在单个 Java 文件中生成所有 Java 代码。
-// 第二行覆盖此设置，所有内容都将在单独的文件中生成。
+// 第一行告诉编译器这个文件中使用了什么语法。
+// 第二行属于命名空间，用来防止不同的消息类型有命名冲突
 
 syntax = "proto3";
 package hello;
@@ -105,7 +105,7 @@ $ npm i --save-dev ts-protoc-gen @improbable-eng/grpc-web
 ```
 
 
-### ### 步骤 2.3。 安装代码生成器插件 [protoc](https://github.com/protocolbuffers/protobuf/releases)
+### 步骤 2.3。 安装代码生成器插件 [protoc](https://github.com/protocolbuffers/protobuf/releases)
 
 ```sh
 $ PROTOC_ZIP=protoc-22.2-osx-x86_64.zip
@@ -350,7 +350,7 @@ async function main(str1, str2) {
 
 
 
-## (5) （5）生成客户端文件
+## (5) 生成客户端文件
 
 最后，将所有这些放在一起，我们可以将所有相关的 JS 文件编译成一个可以在浏览器中使用的 JS 库。
 
@@ -452,7 +452,7 @@ runServer();
 
 
 
-## 6）部署后端服务并测试
+## (6) 部署后端服务并测试
 
 
 ### 步骤 6.1。 安装 [envoy](https://www.envoyproxy.io/)

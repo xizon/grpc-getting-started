@@ -52,9 +52,9 @@ Create a proto file `proto/example.proto`:
 
 // Step 1. Basic Configurations
 // ====================================================
-// The first line tells the compiler what syntax is used in this file. By default, the compiler generates all the Java code in a single Java file. 
+// The first line tells the compiler what syntax is used in this file. 
 
-// The second line overrides this setting, and everything will be generated in individual files.
+// The second line belongs to the namespace, which is used to prevent naming conflicts between different message types
 
 syntax = "proto3";
 package hello;
