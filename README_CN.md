@@ -1,11 +1,11 @@
-# gRPC Getting Started
+# gRPC 入门指引
 
-Demonstration of the use of gRPC and front-end.
+gRPC 与前端应用实现过程及其演示包。
 
 ![quick overview](preview.gif)
 
 
-#### File Structures
+#### 目录结构
 
 
 ```sh
@@ -32,34 +32,30 @@ grpc-getting-started/
 ```
 
 
-## (1) Defining the Service
+## (1) 定义服务
 
-We start by defining a service, specifying methods that can be called remotely along with their parameters and return types.
+我们首先定义一个服务，指定可以远程调用的方法及其参数和返回类型。
 
-This is done in the .proto file using the protocol buffers. They are also used for describing the structure of the payload messages.
+这是使用在 .proto 文件中使用协议缓冲完成的，它们还用于描述有效负载消息的结构。
 
-Create a proto file `proto/example.proto`:
+创建一个 proto 文件 `proto/example.proto`：
 
 ```c
 
-// Step 1. Basic Configurations
-// ====================================================
-// The first line tells the compiler what syntax is used in this file. By default, the compiler generates all the Java code in a single Java file. 
-
-// The second line overrides this setting, and everything will be generated in individual files.
+// 步骤 1. 基本配置
+// ================================================ ====
+// 第一行告诉编译器这个文件中使用了什么语法。 默认情况下，编译器在单个 Java 文件中生成所有 Java 代码。
+// 第二行覆盖此设置，所有内容都将在单独的文件中生成。
 
 syntax = "proto3";
 package hello;
 
 
-// Step 2. Defining the Message Structure
-// ====================================================
-// This defines the request payload. Here each attribute that goes into the message is defined along with its type.
-
-// A unique number needs to be assigned to each attribute, called as the tag. This tag is used by the protocol buffer to represent the attribute instead of using the attribute name.
-
-// So, unlike JSON where we would pass attribute name firstName every single time, protocol buffer would use the number 1 to represent firstName. Response payload definition is similar to the request.
-
+// 步骤 2. 定义消息结构
+// ================================================ ====
+// 这定义了请求负载。 此处进入消息的每个属性都与其类型一起定义。
+// 需要为每个属性分配一个唯一的编号，称为标签。 协议缓冲区使用此标记来表示属性，而不是使用属性名称。
+// 所以，不像 JSON 我们每次都会传递属性名称 firstName，protocol buffer 会使用数字 1 来表示 firstName。 响应负载定义类似于请求。
 
 
 message HelloRequest {
@@ -72,9 +68,9 @@ message HelloResponse {
 }
 
 
-// Step 3. Defining the Service Contract
-// ====================================================
-// Finally, let's define the service contract. For our HelloService we define a GetHelloReq() operation:
+// 步骤 3. 定义服务契约
+// ================================================ ====
+// 最后，让我们定义服务契约。 对于我们的 HelloService，我们定义了一个 GetHelloReq() 操作：
 
 service HelloService {
     rpc GetHelloReq(HelloRequest) returns (HelloResponse);
@@ -82,11 +78,11 @@ service HelloService {
 ```
 
 
-## (2) Generating the Code —— Compile the `.proto` file to `.js`
+## (2) 生成代码 —— 将 `.proto` 文件编译为 `.js`
 
 
 
-### Step 2.1. Install the [grpc-web](https://github.com/grpc/grpc-web) runtime library
+### 步骤 2.1。 安装 [grpc-web](https://github.com/grpc/grpc-web) 运行时库
 
 ```sh
 $ cd /{your_directory}/grpc-getting-started
@@ -94,14 +90,14 @@ $ npm i --save-dev grpc-web
 ```
 
 
-### Step 2.2. Install a protoc plugin [ts-protoc-gen](https://github.com/improbable-eng/ts-protoc-gen) that generates TypeScript
+### 步骤 2.2。 安装生成 TypeScript 的插件 [ts-protoc-gen](https://github.com/improbable-eng/ts-protoc-gen)
 
 ```sh
 $ npm i --save-dev ts-protoc-gen @improbable-eng/grpc-web
 ```
 
 
-### Step 2.3. Install the code generator plugin [protoc](https://github.com/protocolbuffers/protobuf/releases)
+### ### 步骤 2.3。 安装代码生成器插件 [protoc](https://github.com/protocolbuffers/protobuf/releases)
 
 ```sh
 $ PROTOC_ZIP=protoc-22.2-osx-x86_64.zip
@@ -112,21 +108,21 @@ $ rm -f $PROTOC_ZIP
 ```
 
 
-You can also use the following command to install (macOS)：
+也可以使用如下命令安装（macOS）：
 
 ```sh
 $ brew install protobuf
 ```
 
 
-Check the version after the installation is complete
+安装完成后查看版本
 
 ```sh
 $ protoc --version
 ```
 
 
-### Step 2.4. Proceed to install plugins [protoc-gen-js](https://www.npmjs.com/package/protoc-gen-js) and [protoc-gen-grpc-web](https://www.npmjs.com/package/protoc-gen-grpc-web)
+### 步骤 2.4。 继续安装插件 [protoc-gen-js](https://www.npmjs.com/package/protoc-gen-js) 和 [protoc-gen-grpc-web](https://www.npmjs.com/package/protoc-gen-grpc-web)
 
 ```sh
 $ sudo npm i -g protoc-gen-js protoc-gen-grpc-web
@@ -134,15 +130,15 @@ $ sudo npm i -g protoc-gen-js protoc-gen-grpc-web
 
 
 
-### Step 2.5. Compile and execute
+### 步骤 2.5。 编译执行
 
-Run the following command to compile the `.proto` file and generate a `.js` file we can recognize.
+运行以下命令编译`.proto`文件，生成我们可以识别的`.js`文件。
 
 ```sh
 $ npm run build:protos
 ```
 
-It will generate four files: 
+它会生成四个文件: 
 
 - `src/proto/example_pb.js`
 - `src/proto/example_pb.d.ts`
@@ -154,21 +150,20 @@ It will generate four files:
 
 <blockquote>
 
-You can download [protobuf-javascript](https://github.com/protocolbuffers/protobuf-javascript) to test. The tutorial please visit [here](https://grpc.io/docs/platforms/web/basics/).
+可以下载[protobuf-javascript](https://github.com/protocolbuffers/protobuf-javascript)进行测试。 教程请访问[这里](https://grpc.io/docs/platforms/web/basics/)。
 
 ```sh
 $ mkdir src/proto
 ```
 
-
-To generate the **protobuf message classes**, run the following command:
+要生成 **protobuf 消息类**，请运行以下命令：
 
 ```sh
 $ protoc  --proto_path=./proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:src/proto --ts_out="src/proto" proto/example.proto
 ```
 
 
-To generate the **client stub**, run the following command:
+要生成 **客户端存根**，请运行以下命令：
 
 ```sh
 $ protoc  --proto_path=./proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out="service=grpc-web:src/proto"  proto/example.proto
@@ -178,20 +173,20 @@ $ protoc  --proto_path=./proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc
 </blockquote>
 
 
-## (3) Server Entry
+## (3) 服务器入口
 
-Next, we implement our `HelloService` interface using Node in the backend gRPC. This will handle requests from clients. The tutorial please visit [here](https://grpc.io/docs/platforms/web/basics/).
+接下来，我们在后端 gRPC 服务中使用 Node 实现我们的 `HelloService` 接口。 这将处理来自客户的请求。 教程请访问[这里](https://grpc.io/docs/platforms/web/basics/)。
 
 
-### Step 3.1. Install plugin [grpc-node](https://github.com/grpc/grpc-node/tree/master)
+
+### 步骤 3.1。 安装插件 [grpc-node](https://github.com/grpc/grpc-node/tree/master)
 
 ```sh
 $ npm i --save-dev @grpc/grpc-js @grpc/proto-loader
 ```
 
 
-### Step 3.2. Create a file `src/server/index.js`:
-
+### 步骤 3.2。 创建文件 `src/server/index.js`：
 
 ```js
 
@@ -267,10 +262,11 @@ main();
 ```
 
 
-## (4) Client Entry
+## (4) 客户端入口
 
 
-Create a file `src/client/index.js`:
+创建文件 `src/client/index.js`：
+
 
 ```js
 const { HelloRequest } = require('../proto/example_pb.js');
@@ -299,7 +295,7 @@ function todo(str1, str2) {
     })
 }
 
-// create form
+// 创建一个表单
 //===================
 const container = document.createElement("div");
 
@@ -332,7 +328,7 @@ $btn.addEventListener('click', (e) => {
 });
 
 
-// display response
+// 显示后端服务器响应的内容
 //===================
 async function main(str1, str2) {
     const data = await todo(str1, str2);
@@ -346,19 +342,19 @@ async function main(str1, str2) {
 
 
 
-## (5) Generate the client file
+## (5) （5）生成客户端文件
 
-Finally, putting all these together, we can compile all the relevant JS files into one single JS library that can be used in the browser.
+最后，将所有这些放在一起，我们可以将所有相关的 JS 文件编译成一个可以在浏览器中使用的 JS 库。
 
 
-### Step 5.1. Install dependencies
+### 步骤 5.1。 安装依赖
 
 ```sh
 $ npm i --save-dev webpack webpack-cli webpack-dev-server html-webpack-plugin browserify google-protobuf
 ```
 
 
-### Step 5.2. Create one file for custom webpack configurations 
+### 步骤 5.2。 为自定义 webpack 配置创建一个文件
 
 `build/client.config.js`: 
 
@@ -408,26 +404,25 @@ module.exports = {
 ```
 
 
-### Step 5.3. Compile the JS Library
+### 步骤 5.3。 编译JS库
 
 ```sh
 $ npm run build:client
 ```
 
-or 
+或者
 
 ```sh
 $ npx webpack --progress --mode production --config ./build/client.config.js
 ```
 
-It will generate a js file `dist/client-main.js` and a html file `dist/index.html`
- 
+它将生成一个 js 文件 `dist/client-main.js` 和一个 html 文件 `dist/index.html`
 
 
 
-### Step 5.4. Webpack server configuration
+### 步骤 5.4。 Webpack 服务器配置
 
-Create a new server file `server.js`
+创建一个新的服务器文件 `server.js`
 
 
 ```js
@@ -449,16 +444,16 @@ runServer();
 
 
 
-## (6) Deploy the backend service and test
+## 6）部署后端服务并测试
 
 
-### Step 6.1. Install [envoy](https://www.envoyproxy.io/)
+### 步骤 6.1。 安装 [envoy](https://www.envoyproxy.io/)
 
+编译 envoy 需要完整安装 Xcode.app。 仅安装命令行工具是不够的。
 
-A full installation of Xcode.app is required to compile `envoy`. Installing just the Command Line Tools is not sufficient.
-
-such as **macOS 12.6.3**, you need to download: 
+如 **macOS 12.6.3**，需要下载：
 [Xcode_14.2](https://developer.apple.com/services-account/download?path=/Developer_Tools/Xcode_14.2/Xcode_14.2.xip)
+
 
 ```sh
 $ brew update
@@ -468,11 +463,12 @@ $ go version
 ```
 
 
-> #### ⚠️ a) If run `brew update` or  `brew install envoy` ERROR, Enter following command to fix it:
-> 
-> **macOS or Linux**
+> #### ⚠️ a) 如果运行 `brew update` 或 `brew install envoy` 出错，输入以下命令修复它：
 >
-> Open your terminal and execute
+> **macOS 或 Linux**
+>
+> 打开你的终端并执行
+>
 >
 > ```sh
 > $ xcode-select --install
@@ -483,17 +479,17 @@ $ go version
 > ```
 > 
 > 
-> #### ⚠️ b) When using go to start the service, an error is reported dial tcp xx.xx.xx.xx:443: i/o timeout
-> 
-> 
-> Manually configure sources
+> #### ⚠️ b) 使用go启动服务时报错 dial tcp xx.xx.xx.xx:443: i/o timeout
+>
+>
+> 手动配置源
 > 
 > ```sh
 > $ export GO111MODULE=on
 > $ export GOPROXY=https://goproxy.cn
 > ```
 > 
-> The above configuration steps will only take effect in the current terminal, how to take effect for a long time, so that there is no need to configure environment variables every time.
+> 以上配置步骤只会在当前终端生效，如何长期生效，这样就不用每次都配置环境变量了。
 > 
 > ```sh
 > $ echo "export GO111MODULE=on" >> ~/.profile
@@ -502,17 +498,16 @@ $ go version
 > ```
 > 
 > 
-> #### ⚠️ c) `bazelisk` do not provide support for this old version.
-> 
-> 
-> Upgrade your operating system.
+> #### ⚠️ c) `bazelisk` 不支持旧版本。
+>
+>
+> 升级您的操作系统。
 >
 
 
+### 步骤 6.2。 配置 Envoy 代理
 
-### Step 6.2. Configure the Envoy Proxy
-
-Create a new file `envoy.yaml`:
+创建一个新文件 `envoy.yaml`：
 
 ```yaml
 
@@ -576,7 +571,7 @@ static_resources:
 ```
 
 
-> ⚠️ If you are running Docker on Mac/Windows, change the last address: `localhost` to
+> ⚠️ 如果您在 Mac/Windows 上运行 Docker，请将最后一个地址：`localhost` 更改为
 > 
 > ```yaml
 >     ...
@@ -584,7 +579,7 @@ static_resources:
 >         address: host.docker.internal
 > ```
 >
-> or if your version of Docker on Mac older then v18.03.0, change it to:
+>  或者如果您在 Mac 上的 Docker 版本比 v18.03.0 更早，请将其更改为：
 >
 > ```yaml
 >     ...
@@ -592,9 +587,9 @@ static_resources:
 >         address: docker.for.mac.localhost
 > ```
 
-### Step 6.3. Run the Envoy proxy. 
+### 步骤 6.3。 运行特使代理。
 
-The **envoy.yaml** file configures Envoy to listen to browser requests at port `12345`, and forward them to port `9090`.
+**envoy.yaml** 文件将 Envoy 配置为在端口 `12345` 监听浏览器请求，并将它们转发到端口 `9090`。
 
 ```sh
 $ npm run proxy
@@ -606,36 +601,34 @@ $ envoy -c ./envoy.yaml
 ```
 
 
-### Step 6.4. When these are all ready, you can open a browser tab and navigate to `http://localhost:10005`
+### 步骤 6.4。 当这些都准备好后，您可以打开浏览器选项卡并导航到 `http://localhost:10005`
+
+  - NodeJS gRPC 服务（端口 `9090`）
+  - webpack 服务器（端口 `10005`）
 
 
- - the NodeJS gRPC Service (port `9090`)
- - the webpack server (port `10005`)
-
-
-run following command to test:
+运行以下命令进行测试：
 
 ```sh
 $ npm run start
 ```
 
-or 
+或者
 
 ```sh
 $ node ./server.js & node ./src/server/index.js
 ```
 
 
-### Step 6.5. Test connection
+### 步骤 6.5。 测试连接
 
-Use the command to detect:
+使用下面的命令检测：
 
 ```sh
 $ curl -I http://localhost:12345/hello.HelloService/GetHelloReq?firstName=Amy&lastName=Grant
 ```
 
 
+## 许可证
 
-## Licensing
-
-Licensed under the [MIT](https://opensource.org/licenses/MIT).
+基于 [MIT](https://opensource.org/licenses/MIT).

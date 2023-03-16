@@ -31,7 +31,7 @@ message HelloResponse {
 
 // Step 3. Defining the Service Contract
 // ====================================================
-// Finally, let's define the service contract. For our HelloService we define a hello() operation:
+// Finally, let's define the service contract. For our HelloService we define a GetHelloReq() operation:
 
 service HelloService {
     rpc GetHelloReq(HelloRequest) returns (HelloResponse);
