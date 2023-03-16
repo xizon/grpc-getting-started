@@ -2,7 +2,7 @@
   "author": "UIUX Lab",
   "email": "uiuxlab@gmail.com",
   "name": "grpc-getting-started",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "none",
   "description": "Demonstration of the use of gRPC and front-end",
   "repository": {
@@ -21,10 +21,12 @@
   "devDependencies": {
     "@grpc/grpc-js": "^1.8.12",
     "@grpc/proto-loader": "^0.7.5",
+    "@improbable-eng/grpc-web": "^0.15.0",
     "browserify": "^17.0.0",
     "google-protobuf": "^3.21.2",
     "grpc-web": "^1.4.2",
     "html-webpack-plugin": "^5.5.0",
+    "ts-protoc-gen": "^0.15.0",
     "webpack": "^5.76.1",
     "webpack-cli": "^5.0.1",
     "webpack-dev-server": "^4.11.1"

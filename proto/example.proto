@@ -1,5 +1,23 @@
+
+// Step 1. Basic Configurations
+// ====================================================
+// The first line tells the compiler what syntax is used in this file. By default, the compiler generates all the Java code in a single Java file. 
+
+// The second line overrides this setting, and everything will be generated in individual files.
+
 syntax = "proto3";
 package hello;
+
+
+// Step 2. Defining the Message Structure
+// ====================================================
+// This defines the request payload. Here each attribute that goes into the message is defined along with its type.
+
+// A unique number needs to be assigned to each attribute, called as the tag. This tag is used by the protocol buffer to represent the attribute instead of using the attribute name.
+
+// So, unlike JSON where we would pass attribute name firstName every single time, protocol buffer would use the number 1 to represent firstName. Response payload definition is similar to the request.
+
+
 
 message HelloRequest {
     string firstName = 1;
@@ -9,6 +27,11 @@ message HelloRequest {
 message HelloResponse {
     string greeting = 1;
 }
+
+
+// Step 3. Defining the Service Contract
+// ====================================================
+// Finally, let's define the service contract. For our HelloService we define a hello() operation:
 
 service HelloService {
     rpc GetHelloReq(HelloRequest) returns (HelloResponse);

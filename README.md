@@ -38,24 +38,30 @@ We start by defining a service, specifying methods that can be called remotely a
 
 This is done in the .proto file using the protocol buffers. They are also used for describing the structure of the payload messages.
 
-
-### Step 1.1. Basic Configurations
-
 Create a proto file `proto/example.proto`:
 
-```sh
+```c
+
+// Step 1. Basic Configurations
+// ====================================================
+// The first line tells the compiler what syntax is used in this file. By default, the compiler generates all the Java code in a single Java file. 
+
+// The second line overrides this setting, and everything will be generated in individual files.
+
 syntax = "proto3";
 package hello;
-```
-
- - The first line tells the compiler what syntax is used in this file. By default, the compiler generates all the Java code in a single Java file. 
- - The second line overrides this setting, and everything will be generated in individual files.
 
 
-### Step 1.2. Defining the Message Structure
+// Step 2. Defining the Message Structure
+// ====================================================
+// This defines the request payload. Here each attribute that goes into the message is defined along with its type.
+
+// A unique number needs to be assigned to each attribute, called as the tag. This tag is used by the protocol buffer to represent the attribute instead of using the attribute name.
+
+// So, unlike JSON where we would pass attribute name firstName every single time, protocol buffer would use the number 1 to represent firstName. Response payload definition is similar to the request.
 
 
-```sh
+
 message HelloRequest {
     string firstName = 1;
     string lastName = 2;
@@ -64,21 +70,12 @@ message HelloRequest {
 message HelloResponse {
     string greeting = 1;
 }
-```
 
 
-This defines the request payload. Here each attribute that goes into the message is defined along with its type.
+// Step 3. Defining the Service Contract
+// ====================================================
+// Finally, let's define the service contract. For our HelloService we define a hello() operation:
 
-A unique number needs to be assigned to each attribute, called as the tag. This tag is used by the protocol buffer to represent the attribute instead of using the attribute name.
-
-So, unlike JSON where we would pass attribute name firstName every single time, protocol buffer would use the number 1 to represent firstName. Response payload definition is similar to the request.
-
-
-### Step 1.3. Defining the Service Contract
-
-Finally, let's define the service contract. For our HelloService we define a hello() operation:
-
-```sh
 service HelloService {
     rpc GetHelloReq(HelloRequest) returns (HelloResponse);
 }
@@ -93,11 +90,18 @@ service HelloService {
 
 ```sh
 $ cd /{your_directory}/grpc-getting-started
-$ npm i grpc-web
+$ npm i --save-dev grpc-web
 ```
 
 
-### Step 2.2. Install the code generator plugin [protoc](https://github.com/protocolbuffers/protobuf/releases)
+### Step 2.2. Install a protoc plugin [ts-protoc-gen](https://github.com/improbable-eng/ts-protoc-gen) that generates TypeScript
+
+```sh
+$ npm i --save-dev ts-protoc-gen @improbable-eng/grpc-web
+```
+
+
+### Step 2.3. Install the code generator plugin [protoc](https://github.com/protocolbuffers/protobuf/releases)
 
 ```sh
 $ PROTOC_ZIP=protoc-22.2-osx-x86_64.zip
@@ -122,7 +126,7 @@ $ protoc --version
 ```
 
 
-### Step 2.3. Proceed to install plugins [protoc-gen-js](https://www.npmjs.com/package/protoc-gen-js) and [protoc-gen-grpc-web](https://www.npmjs.com/package/protoc-gen-grpc-web)
+### Step 2.4. Proceed to install plugins [protoc-gen-js](https://www.npmjs.com/package/protoc-gen-js) and [protoc-gen-grpc-web](https://www.npmjs.com/package/protoc-gen-grpc-web)
 
 ```sh
 $ sudo npm i -g protoc-gen-js protoc-gen-grpc-web
@@ -130,7 +134,7 @@ $ sudo npm i -g protoc-gen-js protoc-gen-grpc-web
 
 
 
-### Step 2.4. Compile and execute
+### Step 2.5. Compile and execute
 
 Run the following command to compile the `.proto` file and generate a `.js` file we can recognize.
 
@@ -138,7 +142,7 @@ Run the following command to compile the `.proto` file and generate a `.js` file
 $ npm run build:protos
 ```
 
-It will generate two file `src/proto/example_pb.js` and `src/proto/example_web_pb.js`
+It will generate two file `src/proto/example_pb.js`, `src/proto/example_pb.d.ts` and `src/proto/example_pb_service.js`, `src/proto/example_pb_service.d.ts`
 
 
 ---
@@ -155,14 +159,14 @@ $ mkdir src/proto
 To generate the **protobuf message classes**, run the following command:
 
 ```sh
-$ protoc  --proto_path=./proto --js_out=import_style=commonjs,binary:src/proto  proto/example.proto
+$ protoc  --proto_path=./proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:src/proto --ts_out="src/proto" proto/example.proto
 ```
 
 
 To generate the **client stub**, run the following command:
 
 ```sh
-$ protoc  --proto_path=./proto --grpc-web_out=import_style=commonjs,mode=grpcwebtext:src/proto  proto/example.proto
+$ protoc  --proto_path=./proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc-gen-ts --ts_out="service=grpc-web:src/proto"  proto/example.proto
 ```
 
 
@@ -265,7 +269,7 @@ Create a file `src/client/index.js`:
 
 ```js
 const { HelloRequest } = require('../proto/example_pb.js');
-const { HelloServiceClient } = require('../proto/example_grpc_web_pb.js');
+const { HelloServiceClient } = require('../proto/example_pb_service.js');
 
 
 const client = new HelloServiceClient('http://' + window.location.hostname + ':12345', null, null);
@@ -624,6 +628,7 @@ Use the command to detect:
 ```sh
 $ curl -I http://localhost:12345/hello.HelloService/GetHelloReq?firstName=Amy&lastName=Grant
 ```
+
 
 
 ## Licensing

@@ -1,5 +1,5 @@
 const { HelloRequest } = require('../proto/example_pb.js');
-const { HelloServiceClient } = require('../proto/example_grpc_web_pb.js');
+const { HelloServiceClient } = require('../proto/example_pb_service.js');
 
 
 const client = new HelloServiceClient('http://' + window.location.hostname + ':12345', null, null);
