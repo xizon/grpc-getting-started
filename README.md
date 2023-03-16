@@ -2,6 +2,14 @@
 
 Demonstration of the use of gRPC and front-end.
 
+---
+
+- [English Documentation](README.md)
+- [中文版说明文档](README_CN.md)
+
+---
+
+
 ![quick overview](preview.gif)
 
 

@@ -2,6 +2,14 @@
 
 gRPC 与前端应用实现过程及其演示包。
 
+---
+
+- [English Documentation](README.md)
+- [中文版说明文档](README_CN.md)
+
+---
+
+
 ![quick overview](preview.gif)
 
 
