@@ -64,7 +64,7 @@ async function main(str1, str2) {
     console.log(data);
 
     const div = document.createElement("h3");
-    div.innerHTML = data.message;
+    div.innerHTML = data;
     document.body.appendChild(div);
 }
 
