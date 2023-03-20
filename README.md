@@ -239,28 +239,36 @@ const newsProto = grpc.loadPackageDefinition(packageDefinition);
 */
 
 
-function getHelloReqImpl(call, callback) {
-    const { firstName, lastName } = call.request;
-    callback({
-        code: grpc.status.ABORTED,
-        message: `Hello: ${firstName} ${lastName}`
-    });
+class gRPC extends grpc.Server {
+    constructor() {
+        super();
+        this.addService(newsProto.hello.HelloService.service, {
+            getHelloReq: this.getHelloReq
+        });
+    }
 
+    /**
+     * request handler.
+     */
+    getHelloReq(call, callback) {
+        const { firstName, lastName } = call.request;
+
+        if( firstName !== '' ) {
+            callback(null, {
+                greeting: `Hello: ${firstName} ${lastName}`
+            });
+        } else {
+            callback({
+                message: 'Name not found',
+                code: grpc.status.INVALID_ARGUMENT
+            });
+        }
+    }
 }
 
-
-function getServer() {
-    const server = new grpc.Server();
-
-    server.addService(newsProto.hello.HelloService.service, {
-        getHelloReq: getHelloReqImpl
-    });
-
-    return server;
-}
 
 function main() {
-    const server = getServer();
+    const server = new gRPC();
     server.bindAsync(
         '127.0.0.1:9090', grpc.ServerCredentials.createInsecure(), (err, port) => {
             if (err) throw err;
@@ -272,6 +280,41 @@ function main() {
 }
 
 main();
+
+
+/*
+
+function copyMetadata(call) { 
+    const metadata = call.metadata.getMap();
+    const responseMetadata = new grpc.Metadata();
+    for (let key in metadata) {
+        responseMetadata.set(key, metadata[key]);
+    }
+    return responseMetadata;
+}
+function getHelloReq(call, callback) { 
+    const { firstName, lastName } = call.request;
+
+    if( firstName !== '' ) {
+        callback(null, {
+            greeting: `Hello: ${firstName} ${lastName}`
+        }, copyMetadata(call));
+    } else {
+        callback({
+            message: 'Name not found',
+            code: grpc.status.INVALID_ARGUMENT
+        });
+    }
+}
+function main() {
+    const server = new grpc.Server();
+    server.addService(newsProto.hello.HelloService.service, {
+        getHelloReq: getHelloReq
+    });
+    ...
+}
+
+*/
 ```
 
 
@@ -347,9 +390,10 @@ async function main(str1, str2) {
     console.log(data);
 
     const div = document.createElement("h3");
-    div.innerHTML = data.message;
+    div.innerHTML = data;
     document.body.appendChild(div);
 }
+
 ```
 
 
