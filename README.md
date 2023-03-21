@@ -338,7 +338,7 @@ function todo(str1, str2) {
         req.setFirstname(str1);
         req.setLastname(str2);
 
-        client.getHelloReq(req, {}, function (err, response) {
+        client.getHelloReq(req, function (err, response) {
             if (err) {
                 resolve(err);
                 //reject(err);

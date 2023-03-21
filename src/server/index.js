@@ -1,46 +1,73 @@
 
 const path = require('path');
-const grpc = require("@grpc/grpc-js");
-const protoLoader = require("@grpc/proto-loader");
-const PROTO_PATH = path.resolve(__dirname, '../../proto/example.proto');
+const grpc = require('@grpc/grpc-js');
+const protoLoader = require('@grpc/proto-loader');
+const PROTO_PATH_SENDINFO = path.resolve(__dirname, '../../proto/example.proto');
+const PROTO_PATH_POST = path.resolve(__dirname, '../../proto/post.proto');
+const { Empty } = require("google-protobuf/google/protobuf/empty_pb");
+const { postsData } = require('./db.js');
 
-
-const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+const sendinfoProto = grpc.loadPackageDefinition(protoLoader.loadSync(PROTO_PATH_SENDINFO, {
     keepCase: true,
     longs: String,
     enums: String,
     defaults: true,
     oneofs: true,
-});
-const newsProto = grpc.loadPackageDefinition(packageDefinition);
-/*
+}));
+const postProto = grpc.loadPackageDefinition(protoLoader.loadSync(PROTO_PATH_POST, {
+    keepCase: true,
+    longs: String,
+    enums: String,
+    defaults: true,
+    oneofs: true,
+}));
+
+/* postProto:
+
 {
-    hello: {
-        HelloRequest: {
+    mypost: {
+        Post: {
             format: 'Protocol Buffer 3 DescriptorProto',
             type: [Object],
             fileDescriptorProtos: [Array]
         },
-        HelloResponse: {
+        PostList: {
             format: 'Protocol Buffer 3 DescriptorProto',
             type: [Object],
             fileDescriptorProtos: [Array]
         },
-        HelloService: [class ServiceClientImpl extends Client] {
+        FilterId: {
+            format: 'Protocol Buffer 3 DescriptorProto',
+            type: [Object],
+            fileDescriptorProtos: [Array]
+        },
+        PostService: [class ServiceClientImpl extends Client] {
             service: [Object],
-            serviceName: 'HelloService'
+            serviceName: 'PostService'
+        }
+    },
+    google: {
+        protobuf: {
+            Empty: [Object]
         }
     }
-} 
+}
 */
 
 
 class gRPC extends grpc.Server {
     constructor() {
         super();
-        this.addService(newsProto.hello.HelloService.service, {
+        this.addService(sendinfoProto.hello.HelloService.service, {
             getHelloReq: this.getHelloReq
         });
+
+        this.addService(postProto.mypost.PostService.service, {
+            getPost: this.getPost,
+            addPost: this.addPost,
+            findId: this.findId
+        });
+
     }
 
     /**
@@ -49,7 +76,7 @@ class gRPC extends grpc.Server {
     getHelloReq(call, callback) {
         const { firstName, lastName } = call.request;
 
-        if( firstName !== '' ) {
+        if (firstName !== '') {
             callback(null, {
                 greeting: `Hello: ${firstName} ${lastName}`
             });
@@ -60,6 +87,30 @@ class gRPC extends grpc.Server {
             });
         }
     }
+
+    getPost(call, callback) {
+        callback(null, {
+            items: postsData
+        });
+    }
+
+    addPost(call, callback) {
+        call.on('data', (item) => {
+            postsData.push(item);  // { id: xxx, title: 'New Post Title xxx' }
+        });
+        call.on('end', () => callback(null, new Empty()));
+    }
+
+    findId(call, callback) {
+        console.log(call.request);
+        const res = postsData.filter(post => post.id === call.request.id);
+        call.write({
+            items: res
+        });
+      
+        call.end();
+    }
+
 }
 
 
@@ -78,7 +129,7 @@ function main() {
 main();
 
 
-/*
+/* ++++ A simple example: ++++
 
 function copyMetadata(call) { 
     const metadata = call.metadata.getMap();
@@ -104,7 +155,7 @@ function getHelloReq(call, callback) {
 }
 function main() {
     const server = new grpc.Server();
-    server.addService(newsProto.hello.HelloService.service, {
+    server.addService(sendinfoProto.hello.HelloService.service, {
         getHelloReq: getHelloReq
     });
     ...

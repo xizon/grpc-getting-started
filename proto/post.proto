@@ -1,0 +1,23 @@
+
+syntax = "proto3";
+package mypost;
+import "google/protobuf/empty.proto";
+
+message Post {
+  int32 id = 1;
+  string title = 2;
+}
+
+message PostList {
+  repeated Post items = 1;
+}
+
+message FilterId {
+  int32 id = 1;
+}
+
+service PostService {
+  rpc GetPost(google.protobuf.Empty) returns (PostList) {};
+  rpc AddPost(stream Post) returns (google.protobuf.Empty) {};
+  rpc FindId (FilterId) returns (stream PostList);
+}
