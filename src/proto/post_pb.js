@@ -122,7 +122,9 @@ proto.mypost.Post.prototype.toObject = function(opt_includeInstance) {
 proto.mypost.Post.toObject = function(includeInstance, msg) {
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    title: jspb.Message.getFieldWithDefault(msg, 2, "")
+    title: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    catName: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    logName: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -167,6 +169,14 @@ proto.mypost.Post.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setTitle(value);
       break;
+    case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCatName(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setLogName(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -210,6 +220,20 @@ proto.mypost.Post.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getCatName();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
+  f = /** @type {string} */ (jspb.Message.getField(message, 4));
+  if (f != null) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
 };
 
 
@@ -246,6 +270,60 @@ proto.mypost.Post.prototype.getTitle = function() {
  */
 proto.mypost.Post.prototype.setTitle = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional string cat_name = 3;
+ * @return {string}
+ */
+proto.mypost.Post.prototype.getCatName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.mypost.Post} returns this
+ */
+proto.mypost.Post.prototype.setCatName = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * optional string log_name = 4;
+ * @return {string}
+ */
+proto.mypost.Post.prototype.getLogName = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.mypost.Post} returns this
+ */
+proto.mypost.Post.prototype.setLogName = function(value) {
+  return jspb.Message.setField(this, 4, value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.mypost.Post} returns this
+ */
+proto.mypost.Post.prototype.clearLogName = function() {
+  return jspb.Message.setField(this, 4, undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.mypost.Post.prototype.hasLogName = function() {
+  return jspb.Message.getField(this, 4) != null;
 };
 
 
@@ -288,7 +366,7 @@ proto.mypost.PostList.prototype.toObject = function(opt_includeInstance) {
  */
 proto.mypost.PostList.toObject = function(includeInstance, msg) {
   var f, obj = {
-    itemsList: jspb.Message.toObjectList(msg.getItemsList(),
+    itemsListList: jspb.Message.toObjectList(msg.getItemsListList(),
     proto.mypost.Post.toObject, includeInstance)
   };
 
@@ -329,7 +407,7 @@ proto.mypost.PostList.deserializeBinaryFromReader = function(msg, reader) {
     case 1:
       var value = new proto.mypost.Post;
       reader.readMessage(value,proto.mypost.Post.deserializeBinaryFromReader);
-      msg.addItems(value);
+      msg.addItemsList(value);
       break;
     default:
       reader.skipField();
@@ -360,7 +438,7 @@ proto.mypost.PostList.prototype.serializeBinary = function() {
  */
 proto.mypost.PostList.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
-  f = message.getItemsList();
+  f = message.getItemsListList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
       1,
@@ -372,10 +450,10 @@ proto.mypost.PostList.serializeBinaryToWriter = function(message, writer) {
 
 
 /**
- * repeated Post items = 1;
+ * repeated Post items_list = 1;
  * @return {!Array<!proto.mypost.Post>}
  */
-proto.mypost.PostList.prototype.getItemsList = function() {
+proto.mypost.PostList.prototype.getItemsListList = function() {
   return /** @type{!Array<!proto.mypost.Post>} */ (
     jspb.Message.getRepeatedWrapperField(this, proto.mypost.Post, 1));
 };
@@ -385,7 +463,7 @@ proto.mypost.PostList.prototype.getItemsList = function() {
  * @param {!Array<!proto.mypost.Post>} value
  * @return {!proto.mypost.PostList} returns this
 */
-proto.mypost.PostList.prototype.setItemsList = function(value) {
+proto.mypost.PostList.prototype.setItemsListList = function(value) {
   return jspb.Message.setRepeatedWrapperField(this, 1, value);
 };
 
@@ -395,7 +473,7 @@ proto.mypost.PostList.prototype.setItemsList = function(value) {
  * @param {number=} opt_index
  * @return {!proto.mypost.Post}
  */
-proto.mypost.PostList.prototype.addItems = function(opt_value, opt_index) {
+proto.mypost.PostList.prototype.addItemsList = function(opt_value, opt_index) {
   return jspb.Message.addToRepeatedWrapperField(this, 1, opt_value, proto.mypost.Post, opt_index);
 };
 
@@ -404,8 +482,8 @@ proto.mypost.PostList.prototype.addItems = function(opt_value, opt_index) {
  * Clears the list making it empty but non-null.
  * @return {!proto.mypost.PostList} returns this
  */
-proto.mypost.PostList.prototype.clearItemsList = function() {
-  return this.setItemsList([]);
+proto.mypost.PostList.prototype.clearItemsListList = function() {
+  return this.setItemsListList([]);
 };
 
 

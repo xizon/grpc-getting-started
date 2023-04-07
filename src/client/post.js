@@ -15,7 +15,7 @@ class UtilsPost {
                     resolve(err);
                     //reject(err);
                 } else {
-                    resolve(response.getItemsList());
+                    resolve(response.getItemsListList());
                 }
             });
 
@@ -26,6 +26,8 @@ class UtilsPost {
         const streamReq = new Post();
         streamReq.setId(Math.floor(Math.random() * 100));
         streamReq.setTitle(`New Post Title ${Math.floor(Math.random() * 100)}`);
+        streamReq.setCatName('newtype');
+        streamReq.setLogName('newlog');
         
         return new Promise((resolve, reject) => {
             const stream = client.addPost((err, res) => {
@@ -50,8 +52,8 @@ class UtilsPost {
             const stream = client.findId(req);
             let data = null;
             stream.on('data', (res) => {
-                console.log('stream.on("data") res 1: ', res.getItemsList());
-                data = res.getItemsList();
+                console.log('stream.on("data") res 1: ', res.getItemsListList());
+                data = res.getItemsListList();
             });
             stream.on('end', (res) => {
                 console.log('stream.on("end") res  2: ', res); 
@@ -113,24 +115,27 @@ class UtilsPost {
     generateList(data) {
         let res = '';
         data.forEach((item) => {
-            res += `<li>(${item.postId}) ${item.postTitle}</li>`;
+            res += `<li>(${item.postId}) ${item.postTitle} - <code>${item.postCat} - ${item.postLog}</code></li>`;
         });
         document.getElementById('poststatus').innerHTML = `<ul>${res}</ul>`;
     }
 
-
+    
     // display response
     //===================
     async getPostList() {
         const data = await this.todoList();
+
         //
         const res = [];
         data.forEach((item, i) => {
             res.push(
                 {
                     'postId': item.getId(),
-                    'postTitle': item.getTitle()
-                }
+                    'postTitle': item.getTitle(),
+                    'postCat': item.getCatName(),
+                    'postLog': item.hasLogName() ? item.getLogName() : 0
+                } 
             );
         });
         return res;
@@ -149,7 +154,9 @@ class UtilsPost {
             res.push(
                 {
                     'postId': item.getId(),
-                    'postTitle': item.getTitle()
+                    'postTitle': item.getTitle(),
+                    'postCat': item.getCatName(),
+                    'postLog': item.hasLogName() ? item.getLogName() : 0
                 }
             );
         });

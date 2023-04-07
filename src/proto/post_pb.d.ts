@@ -11,6 +11,14 @@ export class Post extends jspb.Message {
   getTitle(): string;
   setTitle(value: string): void;
 
+  getCatName(): string;
+  setCatName(value: string): void;
+
+  hasLogName(): boolean;
+  clearLogName(): void;
+  getLogName(): string;
+  setLogName(value: string): void;
+
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Post.AsObject;
   static toObject(includeInstance: boolean, msg: Post): Post.AsObject;
@@ -25,14 +33,16 @@ export namespace Post {
   export type AsObject = {
     id: number,
     title: string,
+    catName: string,
+    logName: string,
   }
 }
 
 export class PostList extends jspb.Message {
-  clearItemsList(): void;
-  getItemsList(): Array<Post>;
-  setItemsList(value: Array<Post>): void;
-  addItems(value?: Post, index?: number): Post;
+  clearItemsListList(): void;
+  getItemsListList(): Array<Post>;
+  setItemsListList(value: Array<Post>): void;
+  addItemsList(value?: Post, index?: number): Post;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): PostList.AsObject;
@@ -46,7 +56,7 @@ export class PostList extends jspb.Message {
 
 export namespace PostList {
   export type AsObject = {
-    itemsList: Array<Post.AsObject>,
+    itemsListList: Array<Post.AsObject>,
   }
 }
 

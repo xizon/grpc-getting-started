@@ -7,20 +7,16 @@ const PROTO_PATH_POST = path.resolve(__dirname, '../../proto/post.proto');
 const { Empty } = require("google-protobuf/google/protobuf/empty_pb");
 const { postsData } = require('./db.js');
 
-const sendinfoProto = grpc.loadPackageDefinition(protoLoader.loadSync(PROTO_PATH_SENDINFO, {
+const loadConfig = {
     keepCase: true,
     longs: String,
     enums: String,
     defaults: true,
     oneofs: true,
-}));
-const postProto = grpc.loadPackageDefinition(protoLoader.loadSync(PROTO_PATH_POST, {
-    keepCase: true,
-    longs: String,
-    enums: String,
-    defaults: true,
-    oneofs: true,
-}));
+};
+
+const sendinfoProto = grpc.loadPackageDefinition(protoLoader.loadSync(PROTO_PATH_SENDINFO, loadConfig));
+const postProto = grpc.loadPackageDefinition(protoLoader.loadSync(PROTO_PATH_POST, loadConfig));
 
 /* postProto:
 
@@ -90,13 +86,13 @@ class gRPC extends grpc.Server {
 
     getPost(call, callback) {
         callback(null, {
-            items: postsData
+            items_list: postsData
         });
     }
 
     addPost(call, callback) {
         call.on('data', (item) => {
-            postsData.push(item);  // { id: xxx, title: 'New Post Title xxx' }
+            postsData.push(item);  // { id: xxx, title: 'New Post Title xxx' , catName: 'newtype' }
         });
         call.on('end', () => callback(null, new Empty()));
     }
@@ -105,7 +101,7 @@ class gRPC extends grpc.Server {
         console.log(call.request);
         const res = postsData.filter(post => post.id === call.request.id);
         call.write({
-            items: res
+            items_list: res
         });
       
         call.end();
