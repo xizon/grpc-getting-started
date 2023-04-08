@@ -1,4 +1,4 @@
-import { PostList, Post, FilterId } from '../proto/post_pb.js';
+import { PostList, Post, PostRow, FilterId } from '../proto/post_pb.js';
 import { PostServiceClient } from '../proto/post_pb_service.js';
 
 const client = new PostServiceClient('http://' + window.location.hostname + ':12345', null, null);
@@ -24,11 +24,20 @@ class UtilsPost {
 
     todoAdd() {
         const streamReq = new Post();
-        streamReq.setId(Math.floor(Math.random() * 100));
-        streamReq.setTitle(`New Post Title ${Math.floor(Math.random() * 100)}`);
+        const id = Math.floor(Math.random() * 100);
+        streamReq.setId(id);
+        streamReq.setTitle(`New Post Title ${id}`);
         streamReq.setCatName('newtype');
         streamReq.setLogName('newlog');
-        
+
+
+        // set properties
+        const streamReqProps = new PostRow();
+        streamReqProps.setPostId(id)
+        streamReqProps.setPostPath('/example' + id)
+        streamReq.setPostProperty(streamReqProps);
+
+        //
         return new Promise((resolve, reject) => {
             const stream = client.addPost((err, res) => {
                 if (err) {
@@ -115,7 +124,7 @@ class UtilsPost {
     generateList(data) {
         let res = '';
         data.forEach((item) => {
-            res += `<li>(${item.postId}) ${item.postTitle} - <code>${item.postCat} - ${item.postLog}</code></li>`;
+            res += `<li>(${item.postId}) ${item.postTitle} - <code>${item.postCat} - ${item.postLog} (Properties: ${item.postProperty.path})</code></li>`;
         });
         document.getElementById('poststatus').innerHTML = `<ul>${res}</ul>`;
     }
@@ -129,12 +138,18 @@ class UtilsPost {
         //
         const res = [];
         data.forEach((item, i) => {
+            const postProperty = item.getPostProperty();
+
             res.push(
                 {
                     'postId': item.getId(),
                     'postTitle': item.getTitle(),
                     'postCat': item.getCatName(),
-                    'postLog': item.hasLogName() ? item.getLogName() : 0
+                    'postLog': item.hasLogName() ? item.getLogName() : 0,
+                    'postProperty': {
+                        'id': postProperty.getPostId(),
+                        'path': postProperty.getPostPath(),
+                    }
                 } 
             );
         });
@@ -151,12 +166,18 @@ class UtilsPost {
         //
         const res = [];
         data.forEach((item, i) => {
+            const postProperty = item.getPostProperty();
+            
             res.push(
                 {
                     'postId': item.getId(),
                     'postTitle': item.getTitle(),
                     'postCat': item.getCatName(),
-                    'postLog': item.hasLogName() ? item.getLogName() : 0
+                    'postLog': item.hasLogName() ? item.getLogName() : 0,
+                    'postProperty': {
+                        'id': postProperty.getPostId(),
+                        'path': postProperty.getPostPath(),
+                    }
                 }
             );
         });

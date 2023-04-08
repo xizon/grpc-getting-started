@@ -4,6 +4,30 @@
 import * as jspb from "google-protobuf";
 import * as google_protobuf_empty_pb from "google-protobuf/google/protobuf/empty_pb";
 
+export class PostRow extends jspb.Message {
+  getPostId(): number;
+  setPostId(value: number): void;
+
+  getPostPath(): string;
+  setPostPath(value: string): void;
+
+  serializeBinary(): Uint8Array;
+  toObject(includeInstance?: boolean): PostRow.AsObject;
+  static toObject(includeInstance: boolean, msg: PostRow): PostRow.AsObject;
+  static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+  static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+  static serializeBinaryToWriter(message: PostRow, writer: jspb.BinaryWriter): void;
+  static deserializeBinary(bytes: Uint8Array): PostRow;
+  static deserializeBinaryFromReader(message: PostRow, reader: jspb.BinaryReader): PostRow;
+}
+
+export namespace PostRow {
+  export type AsObject = {
+    postId: number,
+    postPath: string,
+  }
+}
+
 export class Post extends jspb.Message {
   getId(): number;
   setId(value: number): void;
@@ -18,6 +42,11 @@ export class Post extends jspb.Message {
   clearLogName(): void;
   getLogName(): string;
   setLogName(value: string): void;
+
+  hasPostProperty(): boolean;
+  clearPostProperty(): void;
+  getPostProperty(): PostRow | undefined;
+  setPostProperty(value?: PostRow): void;
 
   serializeBinary(): Uint8Array;
   toObject(includeInstance?: boolean): Post.AsObject;
@@ -35,6 +64,7 @@ export namespace Post {
     title: string,
     catName: string,
     logName: string,
+    postProperty?: PostRow.AsObject,
   }
 }
 
