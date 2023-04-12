@@ -92,7 +92,18 @@ class gRPC extends grpc.Server {
 
     addPost(call, callback) {
         call.on('data', (item) => {
-            postsData.push(item);  // { id: xxx, title: 'New Post Title xxx' , catName: 'newtype' }
+            /*
+            // item:
+            {
+                id: 66,
+                title: 'New Post Title 66',
+                cat_name: 'newtype',
+                post_property: { post_id: '66', post_path: '/example66' },
+                log_name: 'newlog',
+                _log_name: 'log_name'
+            }   
+            */
+            postsData.push(item);
         });
         call.on('end', () => callback(null, new Empty()));
     }
