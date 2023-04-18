@@ -3,6 +3,13 @@ import { PostServiceClient } from '../proto/post_pb_service.js';
 
 const client = new PostServiceClient('http://' + window.location.hostname + ':12345', null, null);
 
+// grpc fault tolerance
+const grpcError = (data) => {
+    if ( data.toString() === 'Error' ) {
+        localStorage.removeItem('XXX_XXX_XXX');
+        document.cookie = `XXX_XXX_XXX=null;expires=${new Date(0).toUTCString()};path=/`;
+    }
+};
 
 class UtilsPost {
 
@@ -135,6 +142,10 @@ class UtilsPost {
     async getPostList() {
         const data = await this.todoList();
 
+        // If a grpc connection error occurs
+        // User needs to log in again
+        grpcError(data);
+
         //
         const res = [];
         data.forEach((item, i) => {
@@ -158,11 +169,21 @@ class UtilsPost {
 
     async addNewPost() {
         const data = await this.todoAdd();
+
+        // If a grpc connection error occurs
+        // User needs to log in again
+        grpcError(data);
+
         return data;
     }
 
     async findPost() {
         const data = await this.todoFindId();
+
+        // If a grpc connection error occurs
+        // User needs to log in again
+        grpcError(data);
+
         //
         const res = [];
         data.forEach((item, i) => {

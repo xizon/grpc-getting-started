@@ -4,6 +4,13 @@ import { HelloServiceClient } from '../proto/example_pb_service.js';
 
 const client = new HelloServiceClient('http://' + window.location.hostname + ':12345', null, null);
 
+// grpc fault tolerance
+const grpcError = (data) => {
+    if ( data.toString() === 'Error' ) {
+        localStorage.removeItem('XXX_XXX_XXX');
+        document.cookie = `XXX_XXX_XXX=null;expires=${new Date(0).toUTCString()};path=/`;
+    }
+};
 
 class UtilsSendInfo {
 
@@ -75,6 +82,11 @@ class UtilsSendInfo {
     //===================
     async sendInfo(str1, str2) {
         const data = await this.todoSend(str1, str2);
+
+        // If a grpc connection error occurs
+        // User needs to log in again
+        grpcError(data);
+
         return data;
     }  
 
