@@ -18,37 +18,37 @@ document.getElementById('btnSend').addEventListener('click', (e) => {
 });
 
 
-// get post list
+// get post list (you can use `async...await`)
 //==============================
 document.getElementById('btnGetPosts').addEventListener('click', (e) => {
     e.preventDefault();
-    UtilsPost.getPostList().then(function (data) {
-        UtilsPost.generateList(data);
+    UtilsPost.getPostList().then(function (response) {
+        UtilsPost.generateList(response.data);
     });
 });
 
-// add new post
+// add new post (you can use `async...await`)
 //==============================
 document.getElementById('btnAddPost').addEventListener('click', (e) => {
     e.preventDefault();
 
-    UtilsPost.addNewPost().then(function (data) {
-        console.log(data);
-        UtilsPost.getPostList().then(function (data) {
-            UtilsPost.generateList(data);
+    UtilsPost.addNewPost().then(function (addrResponse) {
+        console.log(addrResponse);
+        UtilsPost.getPostList().then(function (response) {
+            UtilsPost.generateList(response.data);
         });
     });
 });
 
 
-// find post via ID
+// find post via ID (you can use `async...await`)
 //==============================
 document.getElementById('btnFindId').addEventListener('click', (e) => {
     e.preventDefault();
 
-    UtilsPost.findPost().then(function (data) {
-        console.log(data);
-        UtilsPost.generateList(data);
+    UtilsPost.findPost().then(function (response) {
+        console.log(response);
+        UtilsPost.generateList(response.data);
     });
 });
 

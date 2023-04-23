@@ -5,6 +5,8 @@ const client = new PostServiceClient('http://' + window.location.hostname + ':12
 
 // grpc fault tolerance
 const grpcError = (data) => {
+    if ( typeof data === 'undefined' ) return;
+    
     if ( data.toString() === 'Error' ) {
         localStorage.removeItem('XXX_XXX_XXX');
         document.cookie = `XXX_XXX_XXX=null;expires=${new Date(0).toUTCString()};path=/`;
@@ -22,7 +24,11 @@ class UtilsPost {
                     resolve(err);
                     //reject(err);
                 } else {
-                    resolve(response.getItemsListList());
+                    resolve({
+                        code: 0,
+                        message: '',
+                        data: response.getItemsListList()
+                    })   
                 }
             });
 
@@ -75,7 +81,11 @@ class UtilsPost {
                 console.log('stream.on("end") res  2: ', res); 
                 // {"code":0,"details":"OK","metadata":{"headersMap":{"grpc-status":["0"],"grpc-message":["OK"]}}}
 
-                resolve(data);
+                resolve({
+                    code: 0,
+                    message: '',
+                    data: data
+                })   
             });
             
         })
@@ -146,12 +156,14 @@ class UtilsPost {
         // User needs to log in again
         grpcError(data);
 
-        //
-        const res = [];
-        data.forEach((item, i) => {
-            const postProperty = item.getPostProperty();
 
-            res.push(
+        //
+        const resList = [];
+
+        for (const item of data.data) {
+
+            const postProperty = item.getPostProperty();
+            resList.push(
                 {
                     'postId': item.getId(),
                     'postTitle': item.getTitle(),
@@ -163,13 +175,20 @@ class UtilsPost {
                     }
                 } 
             );
-        });
-        return res;
+            
+        }
+
+        return {
+            code: data.code,
+            message: data.message,
+            data: resList
+        };
+
     }
 
     async addNewPost() {
         const data = await this.todoAdd();
-
+        
         // If a grpc connection error occurs
         // User needs to log in again
         grpcError(data);
@@ -184,12 +203,14 @@ class UtilsPost {
         // User needs to log in again
         grpcError(data);
 
+
         //
-        const res = [];
-        data.forEach((item, i) => {
+        const resList = [];
+
+        for (const item of data.data) {
+
             const postProperty = item.getPostProperty();
-            
-            res.push(
+            resList.push(
                 {
                     'postId': item.getId(),
                     'postTitle': item.getTitle(),
@@ -199,10 +220,16 @@ class UtilsPost {
                         'id': postProperty.getPostId(),
                         'path': postProperty.getPostPath(),
                     }
-                }
+                } 
             );
-        });
-        return res;
+            
+        }
+
+        return {
+            code: data.code,
+            message: data.message,
+            data: resList
+        };
     }
 
 
