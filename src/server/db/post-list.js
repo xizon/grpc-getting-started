@@ -29,4 +29,5 @@ const postsData = [
     }
 ];
 
-exports.postsData = postsData;
+
+module.exports = postsData;

@@ -1,0 +1,24 @@
+
+syntax = "proto3";
+package myarray;
+
+
+message ArrData{
+    int64 arr_id=1;
+    string title=2;
+    string desc=3;
+}
+
+message SaveArrListReq{
+    int64 arr_id=1;
+    repeated ArrData arr_list=11;  //  `getArrListList()`, `setArrListList()`, `addArrList()` methods are generated
+}
+
+message SaveArrListRes{
+    int32 code=1;
+    string message=2;
+}
+
+service ArrayService {
+  rpc SaveArrList(SaveArrListReq) returns(SaveArrListRes);
+}

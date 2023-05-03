@@ -17,7 +17,7 @@ message Post {
 }
 
 message PostList {
-  repeated Post items_list = 1;  //  `getItemsListList()` method is generated for getting the list
+  repeated Post items_list = 1;  //  `getItemsListList()`, `setItemsListList()`, `addItemsList()` methods are generated
 }
 
 message FilterId {

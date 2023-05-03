@@ -4,8 +4,10 @@ const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const PROTO_PATH_SENDINFO = path.resolve(__dirname, '../../proto/example.proto');
 const PROTO_PATH_POST = path.resolve(__dirname, '../../proto/post.proto');
+const PROTO_PATH_ARRAY = path.resolve(__dirname, '../../proto/array.proto');
 const { Empty } = require("google-protobuf/google/protobuf/empty_pb");
-const { postsData } = require('./db.js');
+const postsData = require('./db/post-list.js');
+const arrData = require('./db/array-list.js');
 
 const loadConfig = {
     keepCase: true,
@@ -17,6 +19,7 @@ const loadConfig = {
 
 const sendinfoProto = grpc.loadPackageDefinition(protoLoader.loadSync(PROTO_PATH_SENDINFO, loadConfig));
 const postProto = grpc.loadPackageDefinition(protoLoader.loadSync(PROTO_PATH_POST, loadConfig));
+const arrProto = grpc.loadPackageDefinition(protoLoader.loadSync(PROTO_PATH_ARRAY, loadConfig));
 
 /* postProto:
 
@@ -64,6 +67,11 @@ class gRPC extends grpc.Server {
             findId: this.findId
         });
 
+        this.addService(arrProto.myarray.ArrayService.service, {
+            saveArrList: this.saveArrList
+        });
+
+        
     }
 
     /**
@@ -117,6 +125,50 @@ class gRPC extends grpc.Server {
       
         call.end();
     }
+
+    saveArrList(call, callback) {
+        //console.log(call.request);
+        /*
+        {
+        arr_list: [
+            {
+                arr_id: '3',
+                title: 'Title 1',
+                ...
+            }
+        ],
+        arr_id: '1'
+        }
+        */
+    
+        const list = call.request.address_list;
+    
+        //
+        const oldData = arrData.filter( (c, i) => { 
+            return c.patient_id != call.request.patient_id; 
+        });
+    
+    
+        // delete all
+        arrData.splice(0); 
+    
+        
+        oldData.forEach( (c, i) => {
+            arrData.push({...c});
+        });
+    
+        list.forEach( (c, i) => {
+            arrData.push({...c});
+        });
+    
+    
+        callback(null, {
+            code: 0,
+            message: `update arr`
+        });
+    
+    }
+
 
 }
 
