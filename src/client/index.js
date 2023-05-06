@@ -33,7 +33,6 @@ document.getElementById('btnAddPost').addEventListener('click', (e) => {
     e.preventDefault();
 
     UtilsPost.addNewPost().then(function (addrResponse) {
-        console.log(addrResponse);
         UtilsPost.getPostList().then(function (response) {
             UtilsPost.generateList(response.data);
         });
@@ -47,7 +46,7 @@ document.getElementById('btnFindId').addEventListener('click', (e) => {
     e.preventDefault();
 
     UtilsPost.findPost().then(function (response) {
-        console.log(response);
+        console.log('findPost: ', response);
         UtilsPost.generateList(response.data);
     });
 });

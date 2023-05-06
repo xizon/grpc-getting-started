@@ -1,5 +1,6 @@
 import { PostList, Post, PostRow, FilterId } from '../proto/post_pb.js';
 import { PostServiceClient } from '../proto/post_pb_service.js';
+import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
 
 const client = new PostServiceClient('http://' + window.location.hostname + ':12345', null, null);
 
@@ -17,9 +18,8 @@ class UtilsPost {
 
     todoList() {
         return new Promise((resolve, reject) => {
-            const req = new PostList();
-
-            client.getPost(req, function (err, response) {
+       
+            client.getPost(new Empty(), function (err, response) {
                 if (err) {
                     resolve(err);
                     //reject(err);
