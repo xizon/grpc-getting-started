@@ -1,11 +1,11 @@
-# gRPC 入门指引
+# gRPC 入门指引 (最初版)
 
 gRPC 与前端应用实现过程及其演示包。
 
 ---
 
-- [English Documentation](README.md)
-- [中文版说明文档](README_CN.md)
+- [(original version)English Documentation](README_TUTORIAL.md)
+- [(最初版)中文版说明文档](README_TUTORIAL_CN.md)
 
 ---
 
@@ -13,13 +13,13 @@ gRPC 与前端应用实现过程及其演示包。
 ![quick overview](preview.gif)
 
 
-#### 目录结构
+#### 目录结构（最初版的目录，并非github资源目录）
+
+> **注意：** 以下教程是最初版(最简洁版)，本资源是最初版+扩展版
 
 
 ```sh
-grpc-getting-started/
-├── README.md
-├── LICENSE 
+your-grpc-app/
 ├── package.json
 ├── package-lock.json
 ├── envoy.yaml

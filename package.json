@@ -2,7 +2,7 @@
   "author": "UIUX Lab",
   "email": "uiuxlab@gmail.com",
   "name": "grpc-getting-started",
-  "version": "0.3.5",
+  "version": "0.3.6",
   "main": "none",
   "description": "Demonstration of the use of gRPC and front-end",
   "repository": {
@@ -12,8 +12,11 @@
   "scripts": {
     "build:protos": "sh ./scripts/build-protos.sh",
     "build:client": "webpack --progress --mode production --config ./build/client.config.js",
+    "build:api-prod": "NODE_ENV=production webpack --progress --mode production --config ./build/client-api.config.js",
+    "build:api-dev": "NODE_ENV=development webpack --progress --mode development --config ./build/client-api.config.js",
     "proxy": "envoy -c ./envoy.yaml",
-    "start": "node ./server.js & node ./src/server/index.js"
+    "start": "node ./server.js & node ./src/server/index.js",
+    "test:api": "node ./server-api.js & node ./src/server/index.js"
   },
   "keywords": [
     "grpc"
@@ -35,5 +38,10 @@
     "url": "https://github.com/xizon/grpc-getting-started/issues"
   },
   "homepage": "https://github.com/xizon/grpc-getting-started#readme",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  }
 }

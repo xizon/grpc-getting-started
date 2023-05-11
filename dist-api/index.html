@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Test API</title>
+</head>
+
+<body>
+    <script>
+            window.addEventListener("load", (event) => {
+                const SendInfoService = window['API']['SendInfoService'];
+                SendInfoService.sendInfo('string 1', 'string 2').then(function (data) {
+                    console.log(data); 
+                    // If the call is successful, it will return: "Hello: string 1 string 2"
+                });
+            }); 
+
+    </script>
+
+<script src="api-main.js"></script></body>
+
+</html>
