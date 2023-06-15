@@ -211,7 +211,7 @@ const PROTO_PATH = path.resolve(__dirname, '../../proto/example.proto');
 
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-    keepCase: true,
+    keepCase: true,  // Use `keepUserse` to format JSON to camelCase
     longs: String,
     enums: String,
     defaults: true,

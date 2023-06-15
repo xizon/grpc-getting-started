@@ -205,7 +205,7 @@ const PROTO_PATH = path.resolve(__dirname, '../../proto/example.proto');
 
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-    keepCase: true,
+    keepCase: true,  // 如果使用 `keepUserse`, 数据将采用驼峰命名
     longs: String,
     enums: String,
     defaults: true,
