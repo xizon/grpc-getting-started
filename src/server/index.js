@@ -10,7 +10,7 @@ const postsData = require('./db/post-list.js');
 const arrData = require('./db/array-list.js');
 
 const loadConfig = {
-    keepCase: true,
+    keepCase: true,   // Use `keepUserse` to format JSON to camelCase
     longs: String,
     enums: String,
     defaults: true,
