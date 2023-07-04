@@ -64,12 +64,12 @@ This file is to call with `<script>`, which is used as the interface of gRPC API
 Execute the build command below, it will generate a js file `dist-api/api-main.js` and a html file `dist-api/index.html`
 
 ```sh
-$ build:api-prod
+$ npm run build:api-prod
 ```
 or
 
 ```sh
-$ build:api-dev
+$ npm run build:api-dev
 ```
 
 Next, Use `api-main.js` to call the interface and run following command:

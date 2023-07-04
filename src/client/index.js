@@ -1,8 +1,8 @@
-import UtilsSendInfo from './sendInfo';
-import UtilsPost from './post';
+import SendinfoService from './sendInfo';
+import PostService from './post';
 
-document.body.appendChild(UtilsSendInfo.createSendForm());
-document.body.appendChild(UtilsPost.createPostForm());
+document.body.appendChild(SendinfoService.createSendForm());
+document.body.appendChild(PostService.createPostForm());
 
 
 // send info
@@ -10,7 +10,7 @@ document.body.appendChild(UtilsPost.createPostForm());
 document.getElementById('btnSend').addEventListener('click', (e) => {
     e.preventDefault();
 
-    UtilsSendInfo.sendInfo(document.getElementById('input1').value, document.getElementById('input2').value).then(function (data) {
+    SendinfoService.sendInfo(document.getElementById('input1').value, document.getElementById('input2').value).then(function (data) {
         document.getElementById('formstatus').innerHTML = `${data}`;
     });
 
@@ -22,8 +22,8 @@ document.getElementById('btnSend').addEventListener('click', (e) => {
 //==============================
 document.getElementById('btnGetPosts').addEventListener('click', (e) => {
     e.preventDefault();
-    UtilsPost.getPostList().then(function (response) {
-        UtilsPost.generateList(response.data);
+    PostService.getPostList().then(function (response) {
+        PostService.generateList(response.data);
     });
 });
 
@@ -32,9 +32,9 @@ document.getElementById('btnGetPosts').addEventListener('click', (e) => {
 document.getElementById('btnAddPost').addEventListener('click', (e) => {
     e.preventDefault();
 
-    UtilsPost.addNewPost().then(function (addrResponse) {
-        UtilsPost.getPostList().then(function (response) {
-            UtilsPost.generateList(response.data);
+    PostService.addNewPost().then(function (addrResponse) {
+        PostService.getPostList().then(function (response) {
+            PostService.generateList(response.data);
         });
     });
 });
@@ -45,9 +45,9 @@ document.getElementById('btnAddPost').addEventListener('click', (e) => {
 document.getElementById('btnFindId').addEventListener('click', (e) => {
     e.preventDefault();
 
-    UtilsPost.findPost().then(function (response) {
+    PostService.findPost().then(function (response) {
         console.log('findPost: ', response);
-        UtilsPost.generateList(response.data);
+        PostService.generateList(response.data);
     });
 });
 

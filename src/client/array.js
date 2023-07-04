@@ -1,6 +1,8 @@
 import { SaveArrListReq, ArrData } from '../proto/array_pb.js';
 import { ArrayServiceClient } from '../proto/array_pb_service.js';
 
+import { cancelRun } from './utils/grpc-api-assistant';
+
 const client = new ArrayServiceClient('http://' + window.location.hostname + ':12345', null, null);
 
 // grpc fault tolerance
@@ -14,7 +16,22 @@ const grpcError = (data) => {
 };
 
 // Both save and add can achieve the same result
-class UtilsArray {
+class ArrayService {
+
+    constructor() {
+        this.callArrayServiceAddArrList = null;
+        this.callArrayServiceSaveArrList = null;
+    }
+
+
+    cancelAbortControllerArrayServiceAddArrList() {
+        cancelRun(this.callArrayServiceAddArrList, 'ArrayServiceAddArrList');
+    }
+
+
+    cancelAbortControllerArrayServiceSaveArrList() {
+        cancelRun(this.callArrayServiceSaveArrList, 'ArrayServiceSaveArrList');
+    }
 
     todoArrAdd(arr_id, title, desc) {
         const req = new SaveArrListReq();
@@ -33,7 +50,7 @@ class UtilsArray {
         });
     
 
-        client.saveArrList(req, {
+        this.callArrayServiceAddArrList = client.saveArrList(req, {
             'session-id': 'xxxx-xxxx-xxxxx'
         }, function (err, response) {
             if (err) {
@@ -70,7 +87,7 @@ class UtilsArray {
         req.setArrListList(protoEventsList);
 
 
-        client.saveArrList(req, {
+        this.callArrayServiceSaveArrList = client.saveArrList(req, {
             'session-id': 'xxxx-xxxx-xxxxx'
         }, function (err, response) {
             if (err) {
@@ -112,5 +129,5 @@ class UtilsArray {
     
 }
 
-export default new UtilsArray;
+export default new ArrayService;
 

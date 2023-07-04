@@ -1,6 +1,7 @@
 import { HelloRequest } from '../proto/example_pb.js';
 import { HelloServiceClient } from '../proto/example_pb_service.js';
 
+import { cancelRun } from './utils/grpc-api-assistant';
 
 const client = new HelloServiceClient('http://' + window.location.hostname + ':12345', null, null);
 
@@ -12,7 +13,15 @@ const grpcError = (data) => {
     }
 };
 
-class UtilsSendInfo {
+class SendinfoService {
+
+    constructor() {
+        this.callSendinfoService = null;
+    }
+
+    cancelAbortControllerSendinfoService() {
+        cancelRun(this.callSendinfoService, 'SendinfoService');
+    }
 
     todoSend(str1, str2) {
 
@@ -21,7 +30,7 @@ class UtilsSendInfo {
             req.setFirstname(str1);
             req.setLastname(str2);
 
-            client.getHelloReq(req, function (err, response) {
+            this.callSendinfoService = client.getHelloReq(req, function (err, response) {
                 if (err) {
                     resolve(err);
                     //reject(err);
@@ -93,4 +102,4 @@ class UtilsSendInfo {
 }
 
 
-export default new UtilsSendInfo;
+export default new SendinfoService;

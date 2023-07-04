@@ -8,12 +8,23 @@
 
 <body>
     <script>
+            window['API_DEBUG'] = true;
             window.addEventListener("load", (event) => {
                 const SendInfoService = window['API']['SendInfoService'];
                 SendInfoService.sendInfo('string 1', 'string 2').then(function (data) {
                     console.log(data); 
                     // If the call is successful, it will return: "Hello: string 1 string 2"
                 });
+
+
+                //
+                const PostService = window['API']['PostService'];
+                PostService.getPostList().then(function (data) {
+                    console.log(data); 
+                });
+
+                // PostService.cancelAbortControllerPostServiceGetPost();
+
             }); 
 
     </script>

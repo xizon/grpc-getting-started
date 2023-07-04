@@ -2,6 +2,9 @@ import { PostList, Post, PostRow, FilterId } from '../proto/post_pb.js';
 import { PostServiceClient } from '../proto/post_pb_service.js';
 import { Empty } from 'google-protobuf/google/protobuf/empty_pb';
 
+
+import { cancelRun } from './utils/grpc-api-assistant';
+
 const client = new PostServiceClient('http://' + window.location.hostname + ':12345', null, null);
 
 // grpc fault tolerance
@@ -14,12 +17,32 @@ const grpcError = (data) => {
     }
 };
 
-class UtilsPost {
+class PostService {
+
+    constructor() {
+        this.callPostServiceGetPost = null;
+        this.callPostServiceAddPost = null;
+        this.callPostServiceFindId = null;
+    }
+
+    cancelAbortControllerPostServiceGetPost() {
+        cancelRun(this.callPostServiceGetPost, 'PostServiceGetPost');
+    }
+
+
+    cancelAbortControllerPostServiceAddPost() {
+        cancelRun(this.callPostServiceAddPost, 'PostServiceAddPost');
+    }
+
+    cancelAbortControllerPostServiceFindId() {
+        cancelRun(this.callPostServiceFindId, 'PostServiceFindId');
+    }
+
 
     todoList() {
         return new Promise((resolve, reject) => {
        
-            client.getPost(new Empty(), function (err, response) {
+            this.callPostServiceGetPost = client.getPost(new Empty(), function (err, response) {
                 if (err) {
                     resolve(err);
                     //reject(err);
@@ -52,14 +75,14 @@ class UtilsPost {
 
         //
         return new Promise((resolve, reject) => {
-            const stream = client.addPost((err, res) => {
+            this.callPostServiceAddPost = client.addPost((err, res) => {
                 if (err) {
-                    stream.end();
+                    this.callPostServiceAddPost.end();
                     reject();
                 }
             });
         
-            stream.write(streamReq);
+            this.callPostServiceAddPost.write(streamReq);
             resolve();
 
         });
@@ -71,13 +94,13 @@ class UtilsPost {
             const req = new FilterId();
             req.setId(3);
 
-            const stream = client.findId(req);
+            this.callPostServiceFindId = client.findId(req);
             let data = null;
-            stream.on('data', (res) => {
+            this.callPostServiceFindId.on('data', (res) => {
                 console.log('stream.on("data") res 1: ', res.getItemsListList());
                 data = res.getItemsListList();
             });
-            stream.on('end', (res) => {
+            this.callPostServiceFindId.on('end', (res) => {
                 console.log('stream.on("end") res  2: ', res); 
                 // {"code":0,"details":"OK","metadata":{"headersMap":{"grpc-status":["0"],"grpc-message":["OK"]}}}
 
@@ -236,6 +259,6 @@ class UtilsPost {
     
 }
 
-export default new UtilsPost;
+export default new PostService;
 
 
