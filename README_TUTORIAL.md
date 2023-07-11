@@ -211,6 +211,9 @@ $ protoc  --proto_path=./proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc
 ```
 
 
+⚠️ ***Note:** If use Windows, the path of the plugin should be written as `--plugin=protoc-gen-ts=.\node_modules\.bin\protoc-gen-ts.cmd` 
+
+
 </blockquote>
 
 

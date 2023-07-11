@@ -205,6 +205,9 @@ $ protoc  --proto_path=./proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc
 ```
 
 
+⚠️ **注意：** 如果使用 windows，插件的路径要写成 `--plugin=protoc-gen-ts=.\node_modules\.bin\protoc-gen-ts.cmd` 
+
+
 </blockquote>
 
 
