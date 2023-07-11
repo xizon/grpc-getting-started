@@ -40,6 +40,33 @@ your-grpc-app/
 └──
 ```
 
+Before starting the project, you need to create a basic `package.json` file, install webpack, and then proceed to the following steps. Sample code:
+
+```json
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "main": "none",
+  "description": "",
+  "scripts": {
+    "build": "webpack --config prod.config.js"
+  },
+  "devDependencies": {
+    "webpack": "^5.76.1",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "license": "MIT"
+}
+
+```
+
+You can also directly create a `package.json` file using the following command， For more information, see [Webpack](https://webpack.js.org/configuration/)
+
+```sh
+$ npx webpack init
+```
+
 
 ## (1) Defining the Service
 
@@ -560,6 +587,38 @@ $ go version
 > 
 > Upgrade your operating system.
 >
+>
+>
+> #### ⚠️ d) Use docker to install envoy and use `.yaml` to customize the configuration, checkout [Using the Envoy Docker Image](https://www.envoyproxy.io/docs/envoy/latest/start/docker)
+>
+>
+> （d-1）Pull the image (envoy 1.27.0-dev-65273b), you can find it in the docker image after success,
+> 
+> ```sh
+> $ docker pull envoyproxy/envoy:dev-65273b2a9b25e9650a4379c9eeb0c1c48f29089c
+> $ docker run --rm envoyproxy/envoy:dev-65273b2a9b25e9650a4379c9eeb0c1c48f29089c --version
+> $ docker image ls
+> ```
+> 
+> （d-2）Use envoy mirror and apply `.yaml` custom configuration. First you need to create a new project folder, and create files `Dockerfile` and `envoy.yaml` in the root directory. `Dockerfile` content is as follows:
+> 
+> ```sh
+> FROM envoyproxy/envoy:dev-65273b2a9b25e9650a4379c9eeb0c1c48f29089c
+> COPY envoy.yaml /etc/envoy/envoy.yaml
+> RUN chmod go+r /etc/envoy/envoy.yaml
+> ```
+> 
+> （d-3）Go to your project directory and run the following command:
+> 
+> ```sh
+> # Build the Docker image using:
+> $ docker build -t envoy:v1 .
+> # Assuming Envoy is configured to listen on ports 9901 and 10000, you can now start it with (according to `envoy.yaml` file):
+> $ docker run -d --name envoy -p 9901:9901 -p 10000:10000 envoy:v1
+> ```
+> 
+> （d-4）After startup the envoy proxy service will run.
+> 
 
 
 

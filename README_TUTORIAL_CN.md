@@ -39,6 +39,33 @@ your-grpc-app/
 └──
 ```
 
+项目开始之前，你需要新建一个基础的 `package.json` 文件，安装 webpack，然后再继续下面的步骤。示例代码：
+
+```json
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "main": "none",
+  "description": "",
+  "scripts": {
+    "build": "webpack --config prod.config.js"
+  },
+  "devDependencies": {
+    "webpack": "^5.76.1",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "license": "MIT"
+}
+
+```
+
+也可以直接使用下面的命令创建 `package.json` 文件，详细内容请参看 [Webpack](https://webpack.js.org/configuration/)
+```sh
+$ npx webpack init
+```
+
+
 
 ## (1) 定义服务
 
@@ -556,6 +583,41 @@ $ go version
 >
 > 升级您的操作系统。
 >
+>
+>
+> #### ⚠️ d) 使用 docker 安装envoy，并使用 `.yaml` 自定义配置，更多内容参看 [Using the Envoy Docker Image](https://www.envoyproxy.io/docs/envoy/latest/start/docker)
+>
+>
+> （d-1）拉取镜像（envoy 1.27.0-dev-65273b），成功后可以在 docker 镜像中找到它，
+> 
+> ```sh
+> $ docker pull envoyproxy/envoy:dev-65273b2a9b25e9650a4379c9eeb0c1c48f29089c
+> $ docker run --rm envoyproxy/envoy:dev-65273b2a9b25e9650a4379c9eeb0c1c48f29089c --version
+> $ docker image ls
+> ```
+> 
+> （d-2）使用 envoy 镜像并应用 `.yaml` 自定义配置。首先你需要新建一个项目文件夹，并在根目录创建文件 `Dockerfile` 和 `envoy.yaml`, `Dockerfile` 的内容如下：
+> 
+> ```sh
+> FROM envoyproxy/envoy:dev-65273b2a9b25e9650a4379c9eeb0c1c48f29089c
+> COPY envoy.yaml /etc/envoy/envoy.yaml
+> RUN chmod go+r /etc/envoy/envoy.yaml
+> ```
+> 
+> （d-3）进入你的项目目录，然后运行下面的命令：
+> 
+> ```sh
+> # 构建新的 envoy 镜像：
+> $ docker build -t envoy:v1 .
+> # 假设 Envoy 配置为侦听端口 9901 和 10000，您现在可以使用以下命令启动它（根据 `envoy.yaml` 文件的端口来配置自己想要侦听的端口）：
+> $ docker run -d --name envoy -p 9901:9901 -p 10000:10000 envoy:v1
+> ```
+> 
+> （d-4）启动以后 envoy 代理服务将运行。
+> 
+
+
+
 
 
 ### 步骤 6.2。 配置 Envoy 代理
