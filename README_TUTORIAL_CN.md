@@ -205,7 +205,11 @@ $ protoc  --proto_path=./proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc
 ```
 
 
-⚠️ **注意：** 如果使用 windows，插件的路径要写成 `--plugin=protoc-gen-ts=.\node_modules\.bin\protoc-gen-ts.cmd` 
+⚠️ **注意(1)：** 如果使用 windows，插件的路径要写成 `--plugin=protoc-gen-ts=.\node_modules\.bin\protoc-gen-ts.cmd` 
+
+⚠️ **注意(2)：** 如果没有正确生成 `.d.ts` 文件，可以使用 [grpc_tools_node_protoc](https://github.com/agreatfool/grpc_tools_node_protoc_ts) 插件生成。
+
+
 
 
 </blockquote>

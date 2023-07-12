@@ -211,7 +211,10 @@ $ protoc  --proto_path=./proto --plugin=protoc-gen-ts=./node_modules/.bin/protoc
 ```
 
 
-⚠️ ***Note:** If use Windows, the path of the plugin should be written as `--plugin=protoc-gen-ts=.\node_modules\.bin\protoc-gen-ts.cmd` 
+⚠️ ***Note(1):** If use Windows, the path of the plugin should be written as `--plugin=protoc-gen-ts=.\node_modules\.bin\protoc-gen-ts.cmd` 
+
+⚠️ ***Note(2):** Generate TypeScript d.ts definitions for generated js files from [grpc_tools_node_protoc](https://github.com/agreatfool/grpc_tools_node_protoc_ts) when generated `.d.ts` file failed.
+
 
 
 </blockquote>
