@@ -619,8 +619,7 @@ $ go version
 > ```sh
 > # Build the Docker image using:
 > $ docker build -t envoy:v1 .
-> # Assuming Envoy is configured to listen on ports 9901 and 10000, you can now start it with (according to `envoy.yaml` file):
-> $ docker run -d --name envoy -p 9901:9901 -p 10000:10000 envoy:v1
+> $ docker run -d --name envoy  -p 12345:12345 envoy:v1
 > ```
 > 
 > （d-4）After startup the envoy proxy service will run.
@@ -694,7 +693,7 @@ static_resources:
 ```
 
 
-> ⚠️ If you are running Docker on Mac/Windows, change the last address: `localhost` to
+> ⚠️ If you are running Docker on Mac/Windows, change the last address: `localhost` or `127.0.0.1` to
 > 
 > ```yaml
 >     ...
@@ -709,6 +708,22 @@ static_resources:
 >     socket_address:
 >         address: docker.for.mac.localhost
 > ```
+> 
+> 
+>  Meanwhile, please replace the first address `127.0.0.1` to `0.0.0.0`, remember to modify the client and server files at the same time:
+>
+> ```yaml
+> static_resources:
+>   listeners:
+>     - name: listener_0
+>       address:
+>         socket_address: { address: 0.0.0.0, port_value: 12345 }
+> ...
+> ```
+> 
+> 
+> 
+
 
 ### Step 6.3. Run the Envoy proxy. 
 

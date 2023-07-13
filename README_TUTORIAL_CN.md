@@ -616,8 +616,7 @@ $ go version
 > ```sh
 > # 构建新的 envoy 镜像：
 > $ docker build -t envoy:v1 .
-> # 假设 Envoy 配置为侦听端口 9901 和 10000，您现在可以使用以下命令启动它（根据 `envoy.yaml` 文件的端口来配置自己想要侦听的端口）：
-> $ docker run -d --name envoy -p 9901:9901 -p 10000:10000 envoy:v1
+> $ docker run -d --name envoy  -p 12345:12345 envoy:v1
 > ```
 > 
 > （d-4）启动以后 envoy 代理服务将运行。
@@ -693,7 +692,7 @@ static_resources:
 ```
 
 
-> ⚠️ 如果您在 Mac/Windows 上运行 Docker，请将最后一个地址：`localhost` 更改为
+> ⚠️ 如果您在 Mac/Windows 上运行 Docker，请将最后一个地址：`localhost` 或者 `127.0.0.1` 更改为
 > 
 > ```yaml
 >     ...
@@ -708,6 +707,24 @@ static_resources:
 >     socket_address:
 >         address: docker.for.mac.localhost
 > ```
+> 
+> 
+>  并且将第一个地址 `127.0.0.1` 换成 `0.0.0.0`，客户端和服务端文件记得也要同时修改 ：
+>
+> ```yaml
+> static_resources:
+>   listeners:
+>     - name: listener_0
+>       address:
+>         socket_address: { address: 0.0.0.0, port_value: 12345 }
+> ...
+> ```
+> 
+> 
+> 
+
+
+
 
 ### 步骤 6.3。 运行特使代理。
 
