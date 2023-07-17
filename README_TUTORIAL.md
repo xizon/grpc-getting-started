@@ -620,6 +620,8 @@ $ go version
 > # Build the Docker image using:
 > $ docker build -t envoy:v1 .
 > $ docker run -d --name envoy  -p 12345:12345 envoy:v1
+> # Do not package the configuration file, directly use the local configuration file path, use the following command:
+> $ docker run -d --name envoy  -p 12345:12345 envoy:v1 -c /etc/envoy/envoy.yaml --config-yaml "$(cat <your-grpc-app>/envoy.yaml)"
 > ```
 > 
 > （d-4）After startup the envoy proxy service will run.

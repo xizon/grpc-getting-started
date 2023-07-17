@@ -617,6 +617,8 @@ $ go version
 > # 构建新的 envoy 镜像：
 > $ docker build -t envoy:v1 .
 > $ docker run -d --name envoy  -p 12345:12345 envoy:v1
+> # 不打包配置文件，直接使用本地配置文件路径，使用下面的命令
+> $ docker run -d --name envoy  -p 12345:12345 envoy:v1 -c /etc/envoy/envoy.yaml --config-yaml "$(cat <your-grpc-app>/envoy.yaml)"
 > ```
 > 
 > （d-4）启动以后 envoy 代理服务将运行。
