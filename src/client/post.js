@@ -182,7 +182,7 @@ class PostService {
 
         //
         const resList = [];
-
+        if (typeof data.data === 'undefined') return {};
         for (const item of data.data) {
 
             const postProperty = item.getPostProperty();
