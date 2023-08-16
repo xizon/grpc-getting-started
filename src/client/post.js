@@ -77,32 +77,19 @@ class PostService {
         return new Promise((resolve, reject) => {
             // this.callPostServiceAddPost = client.addPost({
             //     'my-string': 'xxxxx-xxxxx-xxxxxx',
-            // },(err, res) => {
-            //     if (err) {
-            //         this.callPostServiceAddPost.end();
-            //         reject();
-            //     }
             // });
 
-
-            this.callPostServiceAddPost = client.addPost((err, res) => {
-                if (err) {
-                    this.callPostServiceAddPost.end();
-                    reject();
-                }
-            });
+            this.callPostServiceAddPost = client.addPost();
         
             this.callPostServiceAddPost.write(streamReq);
+            this.callPostServiceAddPost.end();
 
-            // this.callWriteFile.on('end', (res) => {
-            //     resolve({
-            //         code: response.code,
-            //         message: response.details
-            //     }); 
-            // });
-
-            
-            resolve();
+            this.callPostServiceAddPost.on('end', (response) => {
+                resolve({
+                    code: response.code,
+                    message: response.details
+                }); 
+            });
 
         });
     }

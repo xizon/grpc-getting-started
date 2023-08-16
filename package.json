@@ -2,7 +2,7 @@
   "author": "UIUX Lab",
   "email": "uiuxlab@gmail.com",
   "name": "grpc-getting-started",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "main": "none",
   "description": "Demonstration of the use of gRPC and front-end",
   "repository": {
