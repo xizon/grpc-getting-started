@@ -213,7 +213,10 @@ function getHelloReq(call, callback) {
     }
 }
 function main() {
-    const server = new grpc.Server();
+    const server = new grpc.Server({
+        "grpc.max_receive_message_length": 200 * 1024 * 1000,  // 200Mb
+        "grpc.max_send_message_length": 200 * 1024 * 1000
+    });
     server.addService(sendinfoProto.hello.HelloService.service, {
         getHelloReq: getHelloReq
     });
